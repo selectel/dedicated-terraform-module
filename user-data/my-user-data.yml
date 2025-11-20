@@ -1,0 +1,7 @@
+#cloud-config
+
+write_files:
+ - path: "/root/my-text-file"
+   permissions: "0644"
+   content: |
+     Hello world

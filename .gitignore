@@ -1,0 +1,35 @@
+# Игнорировать файлы блокировок Terraform
+**/.terraform.lock.hcl
+
+# Игнорировать кеш Terragrunt
+**/.terragrunt-cache/
+
+# Игнорировать каталоги с состояниями
+**/terragrunt-state/
+
+# Игнорировать локальные файлы Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+
+# Игнорировать файлы планов
+*.tfplan
+
+# Игнорировать файлы переменных окружения
+*.env
+*.auto.tfvars
+
+# Игнорировать IDE-специфичные файлы
+.idea/
+.vscode/
+*.swp
+*.swo
+
+**/.terragrunt-module-manifest
+**/.terragrunt-source-manifest
+**/.terragrunt-source-version
+
+*.bak
+*.tmp
+
