@@ -33,8 +33,8 @@
 
 1.  **Клонируйте репозиторий:**
     ```bash
-    git clone <URL_ВАШЕГО_РЕПОЗИТОРИЯ>
-    cd <НАЗВАНИЕ_РЕПОЗИТОРИЯ>
+    git clone https://github.com/selectel/dedicated-terraform-module.git
+    cd dedicated-terraform-module
     ```
 
 2.  **Установите провайдер Selectel:**
@@ -134,4 +134,3 @@
 - **`lifecycle.ignore_changes`:** В модуле `baremetal-servers` установлено `ignore_changes` для `user_data`, `ssh_key_name`, `ssh_key`. Это означает, что изменения в этих параметрах после создания ресурса **не будут отслеживаться** Terraform и не приведут к его пересозданию или обновлению через `apply`. Изменения нужно вносить вручную или через другие средства.
 - **Проверки (`precondition`):** Модуль включает проверки, которые останавливают выполнение `plan` или `apply`, если обязательные параметры (например, `location_id`, `configuration_id`, `os_id`) не могут быть разрешены.
 
-```
