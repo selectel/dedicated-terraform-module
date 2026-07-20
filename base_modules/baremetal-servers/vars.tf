@@ -3,79 +3,73 @@ variable "server" {
   type = object({
     project_id = string
 
-    os_host_name = optional(string)
+    location_id          = optional(string)
+    location_name        = optional(string)
+    configuration_id     = optional(string)
+    configuration_name   = optional(string)
+    os_id                = optional(string)
+    os_name              = optional(string)
+    os_version_name      = optional(string)
 
-    location_id   = optional(string)
-    location_name = optional(string)
+    public_subnet_cidr   = optional(string)
+    private_subnet_id    = optional(string)
+    private_subnet_cidr  = optional(string)
+    private_subnet_ip    = optional(string)
+    private_vlan_id      = optional(string)
+    create_private_subnet = optional(bool, false)
+    add_private_vlan     = optional(bool, false)
 
-    configuration_id   = optional(string)
-    configuration_name = optional(string)
-
-    os_id   = optional(string)
-    os_name = optional(string)
-
-    os_version_name = optional(string)
-
-    public_subnet_cidr  = optional(string)
-    private_subnet_cidr = optional(string)
-
-    ssh_key_name = optional(string)
-    ssh_key = optional(string)
-    user_data    = optional(string)
-
-    price_plan_name = optional(string)
+    ssh_key_name    = optional(string)
+    ssh_key         = optional(string)
+    user_data       = optional(string)
+    os_host_name    = optional(string)
     os_password     = optional(string)
+    price_plan_name = optional(string)
 
     partitions_config = optional(object({
-      soft_raid_configs = list(object({
+      disk_configs = optional(list(object({
+        name      = string
+        disk_type = string
+      })), [])
+
+      soft_raid_configs = optional(list(object({
         name      = string
         level     = string
         disk_type = string
-      }))
+        count     = optional(number)
+      })), [])
+
       disk_partitions = list(object({
         mount        = string
         size         = optional(number)
         size_percent = optional(number)
-        raid         = string  # должен совпадать с именем одного из soft_raid_configs
+        raid         = optional(string)
         fs_type      = optional(string)
+        disk_name    = optional(string)
       }))
     }), null)
+
+    force_update_additional_params = optional(bool, false) # Флаг отвечающий за переустановку ОС на сервере
 
     timeouts = optional(object({
       create = optional(string, "60m")
       update = optional(string, "60m")
       delete = optional(string, "60m")
-    }), { create = "60m", update = "60m", delete = "60m" })
+    }), {})
   })
 
   validation {
-    condition = (
-      (try(var.server.location_id, null) != null) != (try(var.server.location_name, null) != null)
-    )
-    error_message = "Укажите ровно один параметр: server.location_id ИЛИ server.location_name."
+    condition     = try(var.server.public_subnet_cidr, null) == null || can(regex("^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+/[0-9]+$", var.server.public_subnet_cidr))
+    error_message = "server.public_subnet_cidr должен быть в формате CIDR."
   }
 
   validation {
-    condition = (
-      (try(var.server.configuration_id, null) != null) != (try(var.server.configuration_name, null) != null)
-    )
-    error_message = "Укажите ровно один параметр: server.configuration_id ИЛИ server.configuration_name."
+    condition     = try(var.server.private_subnet_cidr, null) == null || can(regex("^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+/[0-9]+$", var.server.private_subnet_cidr))
+    error_message = "server.private_subnet_cidr должен быть в формате CIDR."
   }
 
   validation {
-    condition = (
-      (try(var.server.os_id, null) != null) != (try(var.server.os_name, null) != null)
-    )
-    error_message = "Укажите ровно один параметр: server.os_id ИЛИ server.os_name."
-  }
-
-  validation {
-    condition     = try(var.server.public_subnet_cidr, null) == null || can(regex("/", var.server.public_subnet_cidr))
-    error_message = "server.public_subnet_cidr должен быть в формате CIDR (например, 203.0.113.0/24)."
-  }
-
-  validation {
-    condition     = try(var.server.private_subnet_cidr, null) == null || can(regex("/", var.server.private_subnet_cidr))
-    error_message = "server.private_subnet_cidr должен быть в формате CIDR (например, 10.0.0.0/24)."
+    condition = !(try(var.server.create_private_subnet, false) && try(var.server.private_vlan_id, null) == null)
+    error_message = "При create_private_subnet=true необходимо указать private_vlan_id."
   }
 }
