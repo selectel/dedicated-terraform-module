@@ -6,7 +6,7 @@ module "my_server2" {
     location_name      = "SPB-2"
     configuration_name = "EL12-SSD"
     os_name            = "Ubuntu"
-    os_version_name    = "24.04"
+    os_version_name    = "24.04 LTS"
     price_plan_name    = "1 month"
     os_host_name       = "my-server2"
     ssh_key            = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHYDdFw08hLa54IlUhcXbtY9mS0/4O4Gnv3qPvQ90GeU"

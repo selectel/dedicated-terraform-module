@@ -6,7 +6,7 @@ module "my_server1" {
     location_name      = "MSK-7"
     configuration_name = "EL49-NVMe-10GE"
     os_name            = "Ubuntu"
-    os_version_name    = "24.04"
+    os_version_name    = "24.04 LTS"
     price_plan_name    = "1 month"
     os_host_name       = "my-server1"
     ssh_key_name       = "ivanov.v"
