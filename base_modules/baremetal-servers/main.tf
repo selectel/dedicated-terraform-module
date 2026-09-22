@@ -275,8 +275,6 @@ resource "selectel_dedicated_server_v1" "server" {
     }
     
     ignore_changes = [
-      partitions_config,
-      user_data,
       ssh_key,
       ssh_key_name,
       power_state
